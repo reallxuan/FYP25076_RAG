@@ -355,21 +355,21 @@ async def process_document_background(
             db.refresh(document)
             logger.info(f"Task {task_id}: Document record created with ID {document.id}")
             
-            # 6. 存储文档块
+            # 6. Store document chunks
             logger.info(f"Task {task_id}: Storing document chunks")
             for i, chunk in enumerate(chunks):
-                # 为每个 chunk 生成唯一的 ID
-                chunk_id = hashlib.sha256(
-                    f"{kb_id}:{file_name}:{chunk.page_content}".encode()
-                ).hexdigest()
+                # Generate unique chunk ID using UUID to avoid duplicates
+                # This ensures each chunk has a globally unique identifier
+                chunk_id = str(uuid.uuid4())
 
                 chunk.metadata["source"] = file_name
                 chunk.metadata["kb_id"] = kb_id
                 chunk.metadata["document_id"] = document.id
+                chunk.metadata["chunk_index"] = i  # Add chunk position for reference
                 chunk.metadata["chunk_id"] = chunk_id
                 
                 doc_chunk = DocumentChunk(
-                    id=chunk_id,  # 添加 ID 字段
+                    id=chunk_id,  # Use UUID as unique identifier
                     document_id=document.id,
                     kb_id=kb_id,
                     file_name=file_name,
@@ -377,6 +377,7 @@ async def process_document_background(
                         "page_content": chunk.page_content,
                         **chunk.metadata
                     },
+                    # Keep content hash for change detection and deduplication
                     hash=hashlib.sha256(
                         (chunk.page_content + str(chunk.metadata)).encode()
                     ).hexdigest()
