@@ -33,8 +33,7 @@ services:
       - app_network
 
   mysql:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:lts
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=ragwebui
@@ -59,7 +58,7 @@ services:
           "$$MYSQL_USER",
           "--password=$$MYSQL_PASSWORD",
         ]
-      interval: 5s
+      interval: 15s
       timeout: 5s
       retries: 5
       start_period: 10s
