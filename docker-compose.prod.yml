@@ -11,7 +11,7 @@ services:
     networks:
       - app_network
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
       chromadb:
         condition: service_started
