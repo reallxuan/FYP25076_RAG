@@ -32,7 +32,7 @@ services:
     networks:
       - app_network
 
-  db:
+  mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:

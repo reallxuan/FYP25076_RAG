@@ -42,7 +42,7 @@ services:
     networks:
       - app_network
     depends_on:
-      - db
+      - mysql
       - chromadb
       - minio
     restart: on-failure
@@ -81,9 +81,8 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  db:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+  mysql:
+    image: mysql:lts
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=ragwebui
