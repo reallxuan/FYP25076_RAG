@@ -82,13 +82,21 @@ services:
         max-file: "3"
 
   mysql:
-    image: mysql:lts
+    image: mysql:8.4.6
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=ragwebui
       - MYSQL_USER=ragwebui
       - MYSQL_PASSWORD=ragwebui
-      - TZ=Asia/Shanghai
+      - TZ=Asia/Singapore
     ports:
       - "3306:3306"
     volumes:
