@@ -33,7 +33,7 @@ services:
       - app_network
 
   mysql:
-    image: mysql:lts
+    image: mysql:8.4.6
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=ragwebui
